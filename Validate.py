@@ -10,9 +10,8 @@ class Validate:
     # Takes a table name, column name, and field value, and error message
     def validateExists(self, table, column, field, message):
         c = self.cnx.cursor()
-        sql = "SELECT %s FROM %s"
-        val = (column, table)
-        c.execute(sql, val)
+        sql = "SELECT " + column + " FROM " + table
+        c.execute(sql)
         arr = []
         for row in c.fetchall():
             arr.append(row[column])
@@ -26,9 +25,26 @@ class Validate:
     # Validate an input based on an array of valid inputs
     # Takes user input and array of valid inputs
     def validateInput(self, in1, arr):
-        if in1 in arr:
+        arrLower = [x.lower() for x in arr]
+        i = in1.lower()
+        if i in arrLower:
             return True
         else:
             return False
+
+    def validateUnique(self, table, column, field, message):
+        c = self.cnx.cursor()
+        sql = "SELECT " + column + " FROM " + table
+        c.execute(sql)
+        arr = []
+        for row in c.fetchall():
+            arr.append(row[column])
+
+        if field in arr:
+            print(message)
+            return False
+        else:
+            return True
+
 
 

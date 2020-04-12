@@ -7,6 +7,7 @@ class Update:
     def __init__(self, cnx):
         self.cnx = cnx
 
+    # Delegate user commands to appropriate method
     def delegate(self):
         print("What do you want to update? Please chose from the following options:")
         print("Sector, Investment Amount, Investment Series, Partner Firm, Partner Contact")
