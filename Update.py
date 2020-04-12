@@ -8,7 +8,27 @@ class Update:
         self.cnx = cnx
 
     def delegate(self):
-        print("Create")
+        print("What do you want to update? Please chose from the following options:")
+        print("Sector, Investment Amount, Investment Series, Partner Firm, Partner Contact")
+        user_in = input("Update: ")
+        v = Validate.Validate(self.cnx)
+        while not v.validateInput(user_in, ["Sector", "Investment Amount",
+                                  "Investment Series", "Partner Firm", "Partner Contact"]):
+            print("Invalid Input Please try again with the options below, or enter Q to go back")
+            print("Sector, Investment Amount, Investment Series, Partner Firm, Partner Contact")
+            user_in = input("Update: ")
+            if user_in == "Q":
+                return
+
+        switch = {
+            "Sector", self.updateSector(),
+            "Investment Amount", self.updateInvestmentAmount(),
+            "Investment Series", self.updateInvestmentSeries(),
+            "Partner Firm", self.updatePartnerFirm(),
+            "Partner Contact", self.updatePartnerContact()
+        }
+        func = switch.get(user_in)
+        func()
 
     # Updates a sector fund size
     def updateSector(self):
@@ -88,12 +108,12 @@ class Update:
     # Validate the inputs to see if they exist
     def validateUpdateInputValue(self, in1, in2, table, column, message):
         identifier = input(in1)
-        value = input(in2)
         v = Validate.Validate(self.cnx)
-        while not v.validateExists(table, column, value,
+        while not v.validateExists(table, column, identifier,
                                    message):
             identifier = input(in1)
             if identifier == 'Q':
                 return []
 
+        value = input(in2)
         return [value, identifier]
