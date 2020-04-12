@@ -2,6 +2,9 @@ class Create:
     def __init__(self, cnx):
         self.cnx = cnx
 
+    def delegate(self):
+        print("Create")
+
     def addLocation(self, locationid, state, city):
         c = self.cnx.cursor()
         sql_statement = "INSERT INTO location (locationID, state, city) VALUES (%d, %s, %s)"

@@ -7,6 +7,9 @@ class Update:
     def __init__(self, cnx):
         self.cnx = cnx
 
+    def delegate(self):
+        print("Create")
+
     # Updates a sector fund size
     def updateSector(self):
         c = self.cnx.cursor()
