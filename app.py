@@ -18,14 +18,17 @@ def connectToDB():
 
 # Initial command line prompt
 def homePage(cnx):
-    print("Enter any of the following commands to interact with the database")
+    print("Enter any of the following commands to interact with the database, or enter Q to quit the application")
     print("Create, Read, Update, Delete")
     user_in = input("What would you like to do: ")
+    if user_in == "Q":
+        return user_in
     v = Validate.Validate(cnx)
-    while not v.validateInput(user_in, ["Create", "Read", "Update", "Delete"]):
-        print("Invalid input please select from the following")
+    while not v.validateInput(user_in, ["Create", "Read", "Update", "Delete", "Q"]):
+        print("Invalid input please select from the following, or enter Q to quit the application")
         print("Create, Read, Update, Delete")
         user_in = input("What would you like to do: ")
+
     return user_in
 
 # Delegate user input to appropriate class
@@ -43,7 +46,9 @@ def delegate(cnx, user_in):
 def main():
     cnx = connectToDB()
     user_in = homePage(cnx)
-    delegate(cnx, user_in).delegate()
+    while not user_in == "Q":
+        delegate(cnx, user_in).delegate()
+    cnx.close()
 
 
 if __name__ == "__main__":
