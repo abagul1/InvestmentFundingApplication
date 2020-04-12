@@ -3,4 +3,4 @@ class Read:
         self.cnx = cnx
 
     def delegate(self):
-        print("Create")
+        print("Read")

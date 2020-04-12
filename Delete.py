@@ -3,4 +3,4 @@ class Delete:
         self.cnx = cnx
 
     def delegate(self):
-        print("Create")
+        print("Delete")
