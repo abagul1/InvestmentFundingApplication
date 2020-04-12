@@ -23,4 +23,12 @@ class Validate:
         else:
             return True
 
+    # Validate an input based on an array of valid inputs
+    # Takes user input and array of valid inputs
+    def validateInput(self, in1, arr):
+        if in1 in arr:
+            return True
+        else:
+            return False
+
 
