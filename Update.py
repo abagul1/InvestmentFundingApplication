@@ -1,4 +1,5 @@
 import Validate
+import app
 # Class to represent Updates
 class Update:
 
@@ -9,27 +10,31 @@ class Update:
 
     # Delegate user commands to appropriate method
     def delegate(self):
-        print("What do you want to update? Please chose from the following options:")
-        print("Sector, Investment Amount, Investment Series, Partner Firm, Partner Contact")
+        print("What do you want to update? Please chose from the following options, or enter Q to go back:")
+        print("Sector Fund, Investment Amount, Investment Series, Partner Firm, Partner Contact")
         user_in = input("Update: ")
+        if user_in.lower() == 'q':
+            return app.main()
         v = Validate.Validate(self.cnx)
-        while not v.validateInput(user_in, ["Sector", "Investment Amount",
+        while not v.validateInput(user_in, ["Sector Fund", "Investment Amount",
                                   "Investment Series", "Partner Firm", "Partner Contact"]):
             print("Invalid Input Please try again with the options below, or enter Q to go back")
-            print("Sector, Investment Amount, Investment Series, Partner Firm, Partner Contact")
+            print("Sector Fund, Investment Amount, Investment Series, Partner Firm, Partner Contact")
             user_in = input("Update: ")
-            if user_in == "Q":
+            if user_in.lower() == "q":
                 return
 
-        switch = {
-            "Sector", self.updateSector(),
-            "Investment Amount", self.updateInvestmentAmount(),
-            "Investment Series", self.updateInvestmentSeries(),
-            "Partner Firm", self.updatePartnerFirm(),
-            "Partner Contact", self.updatePartnerContact()
-        }
-        func = switch.get(user_in)
-        func()
+        user_in = user_in.lower()
+        if user_in == "sector fund":
+            return self.updateSector()
+        elif user_in == "investment amount":
+            return self.updateInvestmentAmount()
+        elif user_in == "investment series":
+            return self.updateInvestmentSeries()
+        elif user_in == "partner firm":
+            return self.updatePartnerFirm()
+        elif user_in == "partner contact":
+            return self.updatePartnerContact()
 
     # Updates a sector fund size
     def updateSector(self):
@@ -39,11 +44,10 @@ class Update:
         if not arr:
             print("Back to homepage")
         else:
-            sql_statement = "UPDATE sector SET fund_size = %d WHERE sectorID = %d"
-            values = (arr[0], arr[1])
-            c.execute(sql_statement, values)
+            sql_statement = "UPDATE sector SET fund_size = " + arr[0] + " WHERE sectorID = " + arr[1]
+            c.execute(sql_statement)
             self.cnx.commit()
-            print(c.rowcount, "Sector fund size updated")
+            print("Sector fund size updated")
             c.close()
 
     # Updates an investment amount
@@ -54,11 +58,10 @@ class Update:
         if not arr:
             print("Back to homepage")
         else:
-            sql_statement = "UPDATE investment SET amount = %d WHERE investmentID = %d"
-            values = (arr[0], arr[1])
-            c.execute(sql_statement, values)
+            sql_statement = "UPDATE investment SET amount = " + arr[0] + " WHERE investmentID = " + arr[1]
+            c.execute(sql_statement)
             self.cnx.commit()
-            print(c.rowcount, "Investment amount updated")
+            print("Investment amount updated")
             c.close()
 
     # Updates an Investment stage
@@ -69,26 +72,24 @@ class Update:
         if not arr:
             print("Back to homepage")
         else:
-            sql_statement = "UPDATE investment SET series = %s WHERE investmentID = %d"
-            values = (arr[0], arr[1])
-            c.execute(sql_statement, values)
+            sql_statement = "UPDATE investment SET series = '" + arr[0] + "' WHERE investmentID = " + arr[1]
+            c.execute(sql_statement)
             self.cnx.commit()
-            print(c.rowcount, "Investment series updated")
+            print("Investment series updated")
             c.close()
 
     # Update a partner's VC firm
     def updatePartnerFirm(self):
         c = self.cnx.cursor()
-        arr = self.validateUpdateInputValue("Partner ID: ", "New Firm: ", 'partners', 'partnerID',
+        arr = self.validateUpdateInputValue("Partner ID: ", "New Firm ID: ", 'partners', 'partnerID',
                                             "Partner doesn't exist try again or press Q to return to home")
         if not arr:
             print("Back to homepage")
         else:
-            sql_statement = "UPDATE partners SET firmID = %d WHERE partnerID = %d"
-            values = (arr[0], arr[1])
-            c.execute(sql_statement, values)
+            sql_statement = "UPDATE partners SET firmID = " + arr[0] + " WHERE partnerID = " + arr[1]
+            c.execute(sql_statement)
             self.cnx.commit()
-            print(c.rowcount, "Partner firm is updated")
+            print("Partner firm is updated")
             c.close()
 
     # Update the contact info of a partner
@@ -99,11 +100,10 @@ class Update:
         if not arr:
             print("Back to homepage")
         else:
-            sql_statement = "UPDATE partners SET contact = %s WHERE partnerID = %d"
-            values = (arr[0], arr[1])
-            c.execute(sql_statement, values)
+            sql_statement = "UPDATE partners SET contact = '" + arr[0] + "' WHERE partnerID = " + arr[1]
+            c.execute(sql_statement)
             self.cnx.commit()
-            print(c.rowcount, "Partner contact is updated")
+            print("Partner contact is updated")
             c.close()
 
     # Validate the inputs to see if they exist
@@ -113,7 +113,7 @@ class Update:
         while not v.validateExists(table, column, identifier,
                                    message):
             identifier = input(in1)
-            if identifier == 'Q':
+            if identifier.lower() == 'Q':
                 return []
 
         value = input(in2)

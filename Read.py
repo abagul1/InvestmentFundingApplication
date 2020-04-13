@@ -22,7 +22,7 @@ class Read:
             if user_in.lower() == "q":
                 return app.main()
 
-        user_in.lower()
+        user_in = user_in.lower()
         if user_in == "table":
             return self.readTable()
         elif user_in == "portfolios by sector":

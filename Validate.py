@@ -15,12 +15,11 @@ class Validate:
         arr = []
         for row in c.fetchall():
             arr.append(row[column])
-
-        if field not in arr:
+        if int(field) in arr:
+            return True
+        else:
             print(message)
             return False
-        else:
-            return True
 
     # Validate an input based on an array of valid inputs
     # Takes user input and array of valid inputs
@@ -40,7 +39,7 @@ class Validate:
         for row in c.fetchall():
             arr.append(row[column])
 
-        if field in arr:
+        if int(field) in arr:
             print(message)
             return False
         else:
