@@ -10,7 +10,7 @@ class Read:
               " Partners at Firm, Firms in Location")
         user_in = input("Read: ")
         if user_in.lower() == "q":
-            return app.main()
+            return app.main(self.cnx)
         v = Validate.Validate(self.cnx)
         while not v.validateInput(user_in, ["Table", "Portfolios by Sector", "Investments by VC Firm",
                                             "Investments by GE Firm", "Partners at Firm",
@@ -20,7 +20,7 @@ class Read:
                   " Partners at Firm, Firms in Location")
             user_in = input("Create: ")
             if user_in.lower() == "q":
-                return app.main()
+                return app.main(self.cnx)
 
         user_in = user_in.lower()
         if user_in == "table":
@@ -56,6 +56,7 @@ class Read:
         c.execute(sql)
         for row in c.fetchall():
             print(row)
+        print("\n")
         c.close()
 
     def getSectorPortfolioCo(self):
@@ -67,7 +68,7 @@ class Read:
         for row in c.fetchall():
             s = s + row['industry'] + ", "
         print(s[:-2])
-        arr = self.validateUpdateInputValue("Sector Industry: ", "sector", "industry",
+        arr = self.validateReadInputValue("Sector Industry: ", "sector", "industry",
                                       "Industry doesn't exist try again or press Q to return to home")
         if not arr:
             return
@@ -75,6 +76,7 @@ class Read:
             c.callproc('getSectorPortfolioCo', {arr[0]})
             for row in c.fetchall():
                 print(row)
+            print("\n")
         c.close()
 
     def getInvestmentsByVCFirm(self):
@@ -86,7 +88,7 @@ class Read:
         for row in c.fetchall():
             s = s + row['name'] + ", "
         print(s[:-2])
-        arr = self.validateUpdateInputValue("VC Firm Name: ", "vc_firms", "name",
+        arr = self.validateReadInputValue("VC Firm Name: ", "vc_firms", "name",
                                             "Firm doesn't exist try again or press Q to return to home")
         if not arr:
             return
@@ -94,6 +96,7 @@ class Read:
             c.callproc('getInvestmentByVCFirm', {arr[0]})
             for row in c.fetchall():
                 print(row)
+            print("\n")
         c.close()
 
     def getInvestmentsByGEFirm(self):
@@ -105,7 +108,7 @@ class Read:
         for row in c.fetchall():
             s = s + row['name'] + ", "
         print(s[:-2])
-        arr = self.validateUpdateInputValue("GE Firm Name: ", "growth_equity_firms", "name",
+        arr = self.validateReadInputValue("GE Firm Name: ", "growth_equity_firms", "name",
                                             "Firm doesn't exist try again or press Q to return to home")
         if not arr:
             return
@@ -113,6 +116,7 @@ class Read:
             c.callproc('getInvestmentByGEFirm', {arr[0]})
             for row in c.fetchall():
                 print(row)
+            print("\n")
         c.close()
 
     def getPartnersForVCFirm(self):
@@ -124,7 +128,7 @@ class Read:
         for row in c.fetchall():
             s = s + row['name'] + ", "
         print(s[:-2])
-        arr = self.validateUpdateInputValue("VC Firm Name: ", "vc_firms", "name",
+        arr = self.validateReadInputValue("VC Firm Name: ", "vc_firms", "name",
                                             "Firm doesn't exist try again or press Q to return to home")
         if not arr:
             return
@@ -132,6 +136,7 @@ class Read:
             c.callproc('getPartnersForVCFirm', {arr[0]})
             for row in c.fetchall():
                 print(row)
+            print("\n")
         c.close()
 
     def getFirmsInLocation(self):
@@ -143,7 +148,7 @@ class Read:
         for row in c.fetchall():
             s = s + row['city'] + ", "
         print(s[:-2])
-        arr = self.validateUpdateInputValue("City: ", "location", "city",
+        arr = self.validateReadInputValue("City: ", "location", "city",
                                             "Firm doesn't exist try again or press Q to return to home")
         if not arr:
             return
@@ -151,9 +156,10 @@ class Read:
             c.callproc('getFirmsInLocation', {arr[0]})
             for row in c.fetchall():
                 print(row)
+            print("\n")
         c.close()
 
-    def validateUpdateInputValue(self, in1, table, column, message):
+    def validateReadInputValue(self, in1, table, column, message):
         identifier = input(in1)
         v = Validate.Validate(self.cnx)
         while not v.validateExists(table, column, identifier,

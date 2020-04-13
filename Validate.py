@@ -15,7 +15,7 @@ class Validate:
         arr = []
         for row in c.fetchall():
             arr.append(row[column])
-        if int(field) in arr:
+        if field in arr:
             return True
         else:
             print(message)

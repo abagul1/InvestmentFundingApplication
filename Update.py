@@ -14,7 +14,7 @@ class Update:
         print("Sector Fund, Investment Amount, Investment Series, Partner Firm, Partner Contact")
         user_in = input("Update: ")
         if user_in.lower() == 'q':
-            return app.main()
+            return app.main(self.cnx)
         v = Validate.Validate(self.cnx)
         while not v.validateInput(user_in, ["Sector Fund", "Investment Amount",
                                   "Investment Series", "Partner Firm", "Partner Contact"]):
@@ -22,7 +22,7 @@ class Update:
             print("Sector Fund, Investment Amount, Investment Series, Partner Firm, Partner Contact")
             user_in = input("Update: ")
             if user_in.lower() == "q":
-                return
+                return app.main(self.cnx)
 
         user_in = user_in.lower()
         if user_in == "sector fund":
@@ -110,7 +110,7 @@ class Update:
     def validateUpdateInputValue(self, in1, in2, table, column, message):
         identifier = input(in1)
         v = Validate.Validate(self.cnx)
-        while not v.validateExists(table, column, identifier,
+        while not v.validateExists(table, column, int(identifier),
                                    message):
             identifier = input(in1)
             if identifier.lower() == 'Q':

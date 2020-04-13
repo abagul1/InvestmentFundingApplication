@@ -10,53 +10,51 @@ import Delete
 
 # Connection to database
 def connectToDB():
-    #username = input('MySQL Username: ')
-    #password = input('MySQL Password: ')
-    cnx = pymysql.connect(host='localhost', user='root', password='',
+    username = input('MySQL Username: ')
+    password = input('MySQL Password: ')
+    conn = pymysql.connect(host='localhost', user=username, password=password,
                         db='fundingdatabase', charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
-    return cnx
+    return conn
 
 # Initial command line prompt
-def homePage(cnx):
-    print("Enter any of the following commands to interact with the database, or enter Q to quit the application")
+def homePage(conn):
+    print("Enter any of the following commands to interact with the database")
     print("Create, Read, Update, Delete")
     user_in = input("What would you like to do: ")
-    if user_in.lower() == "q":
-        return user_in
-    v = Validate.Validate(cnx)
-    while not v.validateInput(user_in, ["Create", "Read", "Update", "Delete", "Q"]):
-        print("Invalid input please select from the following, or enter Q to quit the application")
+    v = Validate.Validate(conn)
+    while not v.validateInput(user_in, ["Create", "Read", "Update", "Delete"]):
+        print("Invalid input please select from the following:")
         print("Create, Read, Update, Delete")
         user_in = input("What would you like to do: ")
 
     return user_in
 
 # Delegate user input to appropriate class
-def delegate(cnx, user_in):
+def delegate(conn, user_in):
     user_in = user_in.lower()
     if user_in == "create":
-        return Create.Create(cnx)
+        print("\n")
+        return Create.Create(conn)
     elif user_in == "read":
-        return Read.Read(cnx)
+        print("\n")
+        return Read.Read(conn)
     elif user_in == "update":
-        return Update.Update(cnx)
+        print("\n")
+        return Update.Update(conn)
     elif user_in == "delete":
-        return Delete.Delete(cnx)
+        print("\n")
+        return Delete.Delete(conn)
     else:
         raise Exception("Invalid User input: " + user_in)
 
+
 # Main function to run application
-def main():
-    cnx = connectToDB()
-    user_in = homePage(cnx)
-    print(user_in)
-    while not user_in.lower() == "q":
-        delegate(cnx, user_in).delegate()
-    cnx.close()
+def main(conn):
+    user_in = homePage(conn)
+    while True:
+        delegate(conn, user_in).delegate()
 
 
 if __name__ == "__main__":
-    main()
-
-
-
+    cnx = connectToDB()
+    main(cnx)

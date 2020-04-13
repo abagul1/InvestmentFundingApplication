@@ -10,7 +10,7 @@ class Create:
         print("Location, Growth Equity Firm, Venture Capital Firm, Portfolio Company, Sector, Investment, Partner")
         user_in = input("Create: ")
         if user_in.lower() == "q":
-            return app.main()
+            return app.main(self.cnx)
         v = Validate.Validate(self.cnx)
         while not v.validateInput(user_in, ["Location", "Growth Equity Firm", "Venture Capital Firm",
                                             "Portfolio Company", "Sector", "Investment", "Partner"]):
@@ -18,7 +18,7 @@ class Create:
             print("Location, Growth Equity Firm, Venture Capital Firm, Portfolio Company, Sector, Investment, Partner")
             user_in = input("Create: ")
             if user_in.lower() == "q":
-                return app.main()
+                return app.main(self.cnx)
 
         user_in = user_in.lower()
         if user_in == "location":
@@ -47,7 +47,7 @@ class Create:
                             + arr[1] + "', '" + arr[2] + "')"
             c.execute(sql_statement)
             self.cnx.commit()
-            print(c.rowcount, "Location inserted into table")
+            print("Location inserted into table\n")
             c.close()
 
     def addVC(self):
@@ -176,13 +176,17 @@ class Create:
 
     # Validate the inputs to see if they exist
     def validateCreateInputValue(self, arr, table, column, message):
-        identifier = input(arr[0])
-        v = Validate.Validate(self.cnx)
-        while not v.validateUnique(table, column, identifier,
-                                   message):
+        try:
             identifier = input(arr[0])
-            if identifier == 'Q':
-                return []
+            v = Validate.Validate(self.cnx)
+            while not v.validateUnique(table, column, identifier,
+                                       message):
+                identifier = input(arr[0])
+                if identifier == 'Q':
+                    return []
+        except ValueError:
+            print("Cannot input a string as an ID, must be an int, try again")
+            return []
 
         tempArr = [""] * len(arr)
         tempArr[0] = identifier
