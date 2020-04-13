@@ -10,9 +10,9 @@ import Delete
 
 # Connection to database
 def connectToDB():
-    username = input('MySQL Username: ')
-    password = input('MySQL Password: ')
-    cnx = pymysql.connect(host='localhost', user=username, password=password,
+    #username = input('MySQL Username: ')
+    #password = input('MySQL Password: ')
+    cnx = pymysql.connect(host='localhost', user='root', password='',
                         db='fundingdatabase', charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
     return cnx
 
@@ -21,7 +21,7 @@ def homePage(cnx):
     print("Enter any of the following commands to interact with the database, or enter Q to quit the application")
     print("Create, Read, Update, Delete")
     user_in = input("What would you like to do: ")
-    if user_in.lower() == "Q":
+    if user_in.lower() == "q":
         return user_in
     v = Validate.Validate(cnx)
     while not v.validateInput(user_in, ["Create", "Read", "Update", "Delete", "Q"]):
@@ -33,7 +33,7 @@ def homePage(cnx):
 
 # Delegate user input to appropriate class
 def delegate(cnx, user_in):
-    user_in.lower()
+    user_in = user_in.lower()
     if user_in == "create":
         return Create.Create(cnx)
     elif user_in == "read":
@@ -49,6 +49,7 @@ def delegate(cnx, user_in):
 def main():
     cnx = connectToDB()
     user_in = homePage(cnx)
+    print(user_in)
     while not user_in.lower() == "q":
         delegate(cnx, user_in).delegate()
     cnx.close()
