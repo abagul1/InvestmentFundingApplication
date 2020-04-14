@@ -160,12 +160,16 @@ class Read:
         c.close()
 
     def validateReadInputValue(self, in1, table, column, message):
-        identifier = input(in1)
-        v = Validate.Validate(self.cnx)
-        while not v.validateExists(table, column, identifier,
-                                   message):
+        try:
             identifier = input(in1)
-            if identifier.lower() == 'q':
-                return []
+            v = Validate.Validate(self.cnx)
+            while not v.validateExists(table, column, identifier,
+                                       message):
+                identifier = input(in1)
+                if identifier.lower() == 'q':
+                    return []
+        except ValueError:
+            print("Read failed, id was not valid")
+            return []
 
         return [identifier]

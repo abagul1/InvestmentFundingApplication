@@ -44,11 +44,14 @@ class Update:
         if not arr:
             print("Back to homepage")
         else:
-            sql_statement = "UPDATE sector SET fund_size = " + arr[0] + " WHERE sectorID = " + arr[1]
-            c.execute(sql_statement)
-            self.cnx.commit()
-            print("Sector fund size updated")
-            c.close()
+            try:
+                sql_statement = "UPDATE sector SET fund_size = " + arr[0] + " WHERE sectorID = " + arr[1]
+                c.execute(sql_statement)
+                self.cnx.commit()
+                print("Sector fund size updated\n")
+                c.close()
+            except:
+                print("Update Failed!, Check inputs to see if they are valid\n")
 
     # Updates an investment amount
     def updateInvestmentAmount(self):
@@ -58,11 +61,14 @@ class Update:
         if not arr:
             print("Back to homepage")
         else:
-            sql_statement = "UPDATE investment SET amount = " + arr[0] + " WHERE investmentID = " + arr[1]
-            c.execute(sql_statement)
-            self.cnx.commit()
-            print("Investment amount updated")
-            c.close()
+            try:
+                sql_statement = "UPDATE investment SET amount = " + arr[0] + " WHERE investmentID = " + arr[1]
+                c.execute(sql_statement)
+                self.cnx.commit()
+                print("Investment amount updated.\n")
+                c.close()
+            except:
+                print("Update Failed!, Check inputs to see if they are valid\n")
 
     # Updates an Investment stage
     def updateInvestmentSeries(self):
@@ -72,11 +78,14 @@ class Update:
         if not arr:
             print("Back to homepage")
         else:
-            sql_statement = "UPDATE investment SET series = '" + arr[0] + "' WHERE investmentID = " + arr[1]
-            c.execute(sql_statement)
-            self.cnx.commit()
-            print("Investment series updated")
-            c.close()
+            try:
+                sql_statement = "UPDATE investment SET series = '" + arr[0] + "' WHERE investmentID = " + arr[1]
+                c.execute(sql_statement)
+                self.cnx.commit()
+                print("Investment series updated\n")
+                c.close()
+            except:
+                print("Update Failed!, Check inputs to see if they are valid\n")
 
     # Update a partner's VC firm
     def updatePartnerFirm(self):
@@ -86,11 +95,14 @@ class Update:
         if not arr:
             print("Back to homepage")
         else:
-            sql_statement = "UPDATE partners SET firmID = " + arr[0] + " WHERE partnerID = " + arr[1]
-            c.execute(sql_statement)
-            self.cnx.commit()
-            print("Partner firm is updated")
-            c.close()
+            try:
+                sql_statement = "UPDATE partners SET firmID = " + arr[0] + " WHERE partnerID = " + arr[1]
+                c.execute(sql_statement)
+                self.cnx.commit()
+                print("Partner firm is updated\n")
+                c.close()
+            except:
+                print("Update Failed!, Check inputs to see if they are valid\n")
 
     # Update the contact info of a partner
     def updatePartnerContact(self):
@@ -100,21 +112,29 @@ class Update:
         if not arr:
             print("Back to homepage")
         else:
-            sql_statement = "UPDATE partners SET contact = '" + arr[0] + "' WHERE partnerID = " + arr[1]
-            c.execute(sql_statement)
-            self.cnx.commit()
-            print("Partner contact is updated")
-            c.close()
+            try:
+                sql_statement = "UPDATE partners SET contact = '" + arr[0] + "' WHERE partnerID = " + arr[1]
+                c.execute(sql_statement)
+                self.cnx.commit()
+                print("Partner contact is updated\n")
+                c.close()
+            except:
+                print("Update Failed!, Check inputs to see if they are valid\n")
 
     # Validate the inputs to see if they exist
     def validateUpdateInputValue(self, in1, in2, table, column, message):
-        identifier = input(in1)
-        v = Validate.Validate(self.cnx)
-        while not v.validateExists(table, column, int(identifier),
-                                   message):
+        try:
             identifier = input(in1)
-            if identifier.lower() == 'Q':
-                return []
+            v = Validate.Validate(self.cnx)
+            while not v.validateExists(table, column, int(identifier),
+                                       message):
+                identifier = input(in1)
+                if identifier.lower() == 'Q':
+                    return []
 
-        value = input(in2)
+            value = input(in2)
+        except ValueError:
+            print("Update Failed!, Check inputs to see if they are the correct type")
+            return []
+
         return [value, identifier]
